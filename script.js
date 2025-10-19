@@ -34,3 +34,40 @@ form.addEventListener("submit", (e) => {
   form.reset();
   renderTabela();
 });
+
+const renderTabela = () => {
+  tabela.innerHTML = "";
+  alunos.forEach((aluno, index) => {
+    const linha = document.createElement("tr");
+    linha.innerHTML = `
+      <td>${aluno.nome}</td>
+      <td>${aluno.idade}</td>
+      <td>${aluno.curso}</td>
+      <td>${aluno.notaFinal}</td>
+      <td>
+        <button class="btn-editar">Editar</button>
+        <button class="btn-excluir">Excluir</button>
+      </td>
+    `;
+    linha.querySelector(".btn-editar").addEventListener("click", () => editarAluno(index));
+    linha.querySelector(".btn-excluir").addEventListener("click", () => excluirAluno(index));
+    tabela.appendChild(linha);
+  });
+};
+
+const editarAluno = (index) => {
+  const a = alunos[index];
+  nome.value = a.nome;
+  idade.value = a.idade;
+  curso.value = a.curso;
+  notaFinal.value = a.notaFinal;
+  editIndex = index;
+  alert(`Editando ${a.nome}`);
+};
+
+const excluirAluno = (index) => {
+  alert(`Excluindo ${alunos[index].nome}`);
+  alunos.splice(index, 1);
+  renderTabela();
+};
+
