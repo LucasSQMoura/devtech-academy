@@ -15,11 +15,15 @@ class Aluno {
   }
 }
 
+const form = document.getElementById("formAluno");
+const tabela = document.getElementById("tabelaAlunos");
+
 let alunos = [];
 let editIndex = -1;
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+
   const nome = document.getElementById("nome").value;
   const idade = document.getElementById("idade").value;
   const curso = document.getElementById("curso").value;
@@ -57,10 +61,10 @@ const renderTabela = () => {
 
 const editarAluno = (index) => {
   const a = alunos[index];
-  nome.value = a.nome;
-  idade.value = a.idade;
-  curso.value = a.curso;
-  notaFinal.value = a.notaFinal;
+  document.getElementById("nome").value = a.nome;
+  document.getElementById("idade").value = a.idade;
+  document.getElementById("curso").value = a.curso;
+  document.getElementById("notaFinal").value = a.notaFinal;
   editIndex = index;
   alert(`Editando ${a.nome}`);
 };
@@ -71,3 +75,34 @@ const excluirAluno = (index) => {
   renderTabela();
 };
 
+const relatorio = document.getElementById("relatorio");
+
+const listarAprovados = () => {
+  const aprovados = alunos.filter(a => a.isAprovado());
+  relatorio.textContent = "Aprovados:\n" + aprovados.map(a => a.toString()).join("\n");
+};
+
+const mediaNotas = () => {
+  if (alunos.length === 0) return relatorio.textContent = "Sem alunos cadastrados.";
+  const media = alunos.reduce((acc, a) => acc + a.notaFinal, 0) / alunos.length;
+  relatorio.textContent = `Média das notas: ${media.toFixed(2)}`;
+};
+
+const mediaIdades = () => {
+  if (alunos.length === 0) return relatorio.textContent = "Sem alunos cadastrados.";
+  const media = alunos.reduce((acc, a) => acc + parseInt(a.idade), 0) / alunos.length;
+  relatorio.textContent = `Média das idades: ${media.toFixed(2)}`;
+};
+
+const ordenarNomes = () => {
+  const nomes = alunos.map(a => a.nome).sort();
+  relatorio.textContent = "Nomes em ordem alfabética:\n" + nomes.join("\n");
+};
+
+const quantidadePorCurso = () => {
+  const qtd = alunos.reduce((acc, a) => {
+    acc[a.curso] = (acc[a.curso] || 0) + 1;
+    return acc;
+  }, {});
+  relatorio.textContent = "Quantidade por curso:\n" + JSON.stringify(qtd, null, 2);
+};
